@@ -85,7 +85,6 @@
                             <th style="width: 120px;">Supplier</th>
                             <th style="width: 100px;">Tagihan</th>
                             <th style="width: 100px;">Dibayar</th>
-                            <th style="width: 100px;">Sisa</th>
                             <th style="width: 90px;">Tgl Bayar</th>
                             <th style="width: 80px;">Metode</th>
                             <th style="width: 90px;">Status</th>
@@ -168,11 +167,7 @@
                         searchable: false,
                         render: d => fmt(d)
                     },
-                    {
-                        data: 'sisa',
-                        searchable: false,
-                        render: d => `<span class="${d>0?'text-danger fw-bold':''}">${fmt(d)}</span>`
-                    },
+                   
                     {
                         data: 'tanggal_bayar',
                         name: 'tanggal_bayar',

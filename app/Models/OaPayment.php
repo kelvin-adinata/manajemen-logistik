@@ -15,7 +15,11 @@ class OaPayment extends Model
         'metode_bayar', 'bukti_bayar', 'keterangan', 'status',
     ];
 
-    protected $casts = ['tanggal_bayar' => 'date'];
+    protected $casts = [
+        'tanggal_bayar' => 'date',
+        'jumlah_tagihan' => 'decimal:2',
+        'jumlah_bayar' => 'decimal:2',
+    ];
 
     const TIPE = [
         'oa' => 'Pembayaran OA',
@@ -58,6 +62,14 @@ class OaPayment extends Model
 
     public function getSisaTagihanAttribute(): float
     {
-        return max(0, $this->jumlah_tagihan - $this->jumlah_bayar);
+        if (! $this->po_item_id) {
+            return max(0, (float) $this->jumlah_tagihan - (float) $this->jumlah_bayar);
+        }
+
+        $payments = static::query()->where('po_item_id', $this->po_item_id);
+        $jumlahTagihan = (float) ((clone $payments)->orderBy('id')->value('jumlah_tagihan') ?? 0);
+        $jumlahBayar = (float) $payments->sum('jumlah_bayar');
+
+        return max(0, $jumlahTagihan - $jumlahBayar);
     }
 }
